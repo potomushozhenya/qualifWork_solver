@@ -36,14 +36,14 @@ class MonoImplicitSolver:
         # Параметр
         x1322 = 0
         # Жесткие коэф
-        self.v12 = np.array([1, 0.7497764906, (-2.000000004) * x1322 - 0.07632098208], dtype=np.float64)
-        self.v21 = np.array([0.3779915320, 1.150604012], dtype=np.float64)
-        self.b1 = np.array([-0.3083906284, 0.7500000000, 0.5583906263], dtype=np.float64)
+        self.v12 = np.array([1, 1.054961298, (-2.000000002) * x1322 + 0.5477255060], dtype=np.float64)
+        self.v21 = np.array([0.9553418014, 0.5732536779], dtype=np.float64)
+        self.b1 = np.array([-0.3083906286, 0.7500000000, 0.5583906286], dtype=np.float64)
         self.b2 = np.array([0.5000000000, 0.5000000000], dtype=np.float64)
-        self.c1 = np.array([1, 0.9023689463, 0.2357860425], dtype=np.float64)
-        self.c2 = np.array([0.2113248653, 0.7886751820], dtype=np.float64)
-        self.x1 = np.array([[0, 0], [0.1525923712, 0], [1.000014452 * x1322 + 0.3120212735, x1322]], dtype=np.float64)
-        self.x2 = np.array([[-0.1666666667, 0, 0], [0.6380712360, -1, 0]], dtype=np.float64)
+        self.c1 = np.array([1, 0.9023689270, 0.2357022605], dtype=np.float64)
+        self.c2 = np.array([0.7886751347, 0.2113248654], dtype=np.float64)
+        self.x1 = np.array([[0, 0], [-0.1525923710, 0], [0.9999999996 * x1322 - 0.3120232457, x1322]], dtype=np.float64)
+        self.x2 = np.array([[-0.1666666667, 0, 0], [0.6380711875, -1, 0]], dtype=np.float64)
 
     def res(self, y):
         k1 = np.array([], dtype=np.float64)
