@@ -3,19 +3,20 @@ import matplotlib as mpl
 import numpy as np
 from scipy.optimize import fsolve
 mpl.use('Qt5Agg')
-
+k = 0.2
 
 def realSol(x):
-    return [-np.sin(x) + np.cos(x), np.sin(x) + np.cos(x)]
+    global k
+    return [k * np.sin(x) + 0.8 * x + 1, k * np.cos(x) + 0.8]
 
 
 def f1(x, y):
-    return -y
+    return y
 
 
 def f2(x, y):
-
-    return y
+    global k
+    return -k*np.sin(x)
 
 
 class MonoImplicitSolver:
@@ -33,7 +34,7 @@ class MonoImplicitSolver:
         self.diffY1 = np.array([], dtype=np.float64)
         self.diffY2 = np.array([], dtype=np.float64)
         # Параметр
-        x1322 = 0.25
+        x1322 = 0
         # Жесткие коэф
         self.v12 = np.array([1, 0.7497764906, (-2.000000004) * x1322 - 0.07632098208], dtype=np.float64)
         self.v21 = np.array([0.3779915320, 1.150604012], dtype=np.float64)
@@ -98,5 +99,5 @@ class MonoImplicitSolver:
 
 
 task = MonoImplicitSolver()
-print(task.solve( 0, 5, np.array([1, 1]), 0.0001))
+print(task.solve( 0, 5, np.array([1, 1]), 0.00025))
 task.plot()
