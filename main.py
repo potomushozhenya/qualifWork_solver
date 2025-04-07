@@ -1,6 +1,7 @@
 import matplotlib.pyplot as plt
 import matplotlib as mpl
 import numpy as np
+from numpy import sqrt
 from scipy.optimize import fsolve
 mpl.use('Qt5Agg')
 k = 0.2
@@ -34,14 +35,14 @@ class MonoImplicitSolver:
         # Параметр
         x1322 = 0
         # Жесткие коэф
-        self.v12 = np.array([1, 0.7497764906, (-2.000000004) * x1322 - 0.07632098208], dtype=np.float64)
-        self.v21 = np.array([0.3779915320, 1.150604012], dtype=np.float64)
-        self.b1 = np.array([-0.3083906284, 0.7500000000, 0.5583906263], dtype=np.float64)
-        self.b2 = np.array([0.5000000000, 0.5000000000], dtype=np.float64)
-        self.c1 = np.array([1, 0.9023689463, 0.2357860425], dtype=np.float64)
-        self.c2 = np.array([0.2113248653, 0.7886751820], dtype=np.float64)
-        self.x1 = np.array([[0, 0], [0.1525923712, 0], [1.000014452 * x1322 + 0.3120212735, x1322]], dtype=np.float64)
-        self.x2 = np.array([[-0.1666666667, 0, 0], [0.6380712360, -1, 0]], dtype=np.float64)
+        self.v12 = np.array([1, ((1219*sqrt(3) - 2127)*sqrt(2) + 1747*sqrt(3) - 3048)/(18*(4*sqrt(3) - 7)*(16*sqrt(2) + 23)), (((-48*x1322 + 13)*sqrt(3) + 72*x1322 - 23)*sqrt(2) + (-72*x1322 + 17)*sqrt(3) + 108*x1322 - 30)/(6*(2*sqrt(3) - 3)*(2*sqrt(2) + 3))], dtype=np.float64)
+        self.v21 = np.array([2/3 - sqrt(3)/6, ((216*sqrt(3) - 382)*sqrt(2) + 319*sqrt(3) - 564)/(6*(4*sqrt(3) - 7)*(16*sqrt(2) + 23))], dtype=np.float64)
+        self.b1 = np.array([(-1 - sqrt(2))/(2*sqrt(2) + 5), 3/4, (6*sqrt(2) + 9)/(8*sqrt(2) + 20)], dtype=np.float64)
+        self.b2 = np.array([1/2, 1/2], dtype=np.float64)
+        self.c1 = np.array([1, (87*sqrt(2) + 124)/(96*sqrt(2) + 138), (4517*sqrt(2) + 6388)/(19164*sqrt(2) + 27102)], dtype=np.float64)
+        self.c2 = np.array([1/2 - sqrt(3)/6, (5*sqrt(3) - 9)/(24*sqrt(3) - 42)], dtype=np.float64)
+        self.x1 = np.array([[0, 0], [-sqrt(3)*(-3 + sqrt(2))/18, 0], [(((318936*x1322 - 99512)*sqrt(3) - 552384*x1322 + 172369)*sqrt(2) + (451050*x1322 - 140728)*sqrt(3) - 781200*x1322 + 243761)/(6*(97*sqrt(3) - 168)*(548*sqrt(2) + 775)), x1322]], dtype=np.float64)
+        self.x2 = np.array([[-1/6, 0, 0], [(62*sqrt(2) + 87)/(96*sqrt(2) + 138), -1, 0]], dtype=np.float64)
 
     def res(self, y):
         k1 = np.array([], dtype=np.float64)
@@ -74,7 +75,7 @@ class MonoImplicitSolver:
 
         while self.x[-1] < xFin:
             self.x = np.append(self.x, self.x[-1] + self.h[-1])
-            yRK = np.array(fsolve(self.res, y0), dtype=np.float64)
+            yRK = np.array(fsolve(self.res, y0, xtol=10**-12), dtype=np.float64)
             while yRK[0] is None or yRK[1] is None:
                 self.h[-1] = self.h[-1]/2
                 self.x[-1] = self.x[-1] - self.h[-1]
@@ -95,8 +96,7 @@ class MonoImplicitSolver:
         axs.plot(self.x, self.diffY1)
         axs.plot(self.x, self.diffY2)
         plt.show()
-    # Написать функцию вычисления невязки для шага y1-y0 - sum( )
-    # Найти корень этой невязки
+
     #
 
 
