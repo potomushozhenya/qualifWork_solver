@@ -6,17 +6,15 @@ mpl.use('Qt5Agg')
 k = 0.2
 
 def realSol(x):
-    global k
-    return [k * np.sin(x) + 0.8 * x + 1, k * np.cos(x) + 0.8]
+    return [np.cos(x), np.sin(x)]
 
 
 def f1(x, y):
-    return y
+    return -y
 
 
 def f2(x, y):
-    global k
-    return -k*np.sin(x)
+    return y
 
 
 class MonoImplicitSolver:
@@ -53,11 +51,15 @@ class MonoImplicitSolver:
         y0_1 = self.y1[-1]
         y0_2 = self.y2[-1]
         x = self.x[-1]
-        k1 = np.append(k1, f1(x, (1-self.v12[0])*y0_2 + self.v12[0]*y2))
-        k2 = np.append(k2, f2(x + self.c2[0] * self.h[-1], (1 - self.v21[0]) * y0_1 + self.v21[0] * y1 + k1[0] * self.x2[0, 0]))
-        k1 = np.append(k1, f1(x + self.c1[1] * self.h[-1], (1 - self.v12[1]) * y0_2 + self.v12[1] * y2 + self.x1[1][0] * k2[0]))
-        k2 = np.append(k2, f2(x + self.c2[1] * self.h[-1], (1 - self.v21[1]) * y0_1 + self.v21[1] * y1 + self.x2[1][0] * k1[0] + self.x2[1][1] * k1[1]))
-        k1 = np.append(k1, f1(x + self.c1[2] * self.h[-1], (1 - self.v12[2]) * y0_2 + self.v12[2] * y2 + np.dot(self.x1[2], k2)))
+        k1 = np.append(k1, f1(x + self.c1[0] * self.h[-1], (1 - self.v12[0]) * y0_2 + self.v12[0] * y2))
+        k2 = np.append(k2, f2(x + self.c2[0] * self.h[-1],
+                              (1 - self.v21[0]) * y0_1 + self.v21[0] * y1 + self.h[-1] * k1[0] * self.x2[0, 0]))
+        k1 = np.append(k1, f1(x + self.c1[1] * self.h[-1],
+                              (1 - self.v12[1]) * y0_2 + self.v12[1] * y2 + self.h[-1] * self.x1[1][0] * k2[0]))
+        k2 = np.append(k2, f2(x + self.c2[1] * self.h[-1], (1 - self.v21[1]) * y0_1 + self.v21[1] * y1 + self.h[-1] * (
+                    self.x2[1][0] * k1[0] + self.x2[1][1] * k1[1])))
+        k1 = np.append(k1, f1(x + self.c1[2] * self.h[-1],
+                              (1 - self.v12[2]) * y0_2 + self.v12[2] * y2 + self.h[-1] * np.dot(self.x1[2], k2)))
         return [y[0] - y0_1 - self.h[-1] * np.dot(self.b1, k1), y[1] - y0_2 - self.h[-1] * np.dot(self.b2, k2)]
 
     def solve(self, x0, xFin, y0: np.ndarray, h0: float):
@@ -99,5 +101,5 @@ class MonoImplicitSolver:
 
 
 task = MonoImplicitSolver()
-print(task.solve( 0, 5, np.array([1, 1]), 0.00025))
+print(task.solve( 0, 5, np.array([1, 0]), 0.001))
 task.plot()
