@@ -4,18 +4,24 @@ import numpy as np
 from numpy import sqrt
 from scipy.optimize import fsolve
 mpl.use('Qt5Agg')
-k = 0.2
+k = -0.64
+coef = np.sqrt(-1 * k)
 
 def realSol(x):
-    return [np.cos(x), np.sin(x)]
+    global coef
+    return [(5/4) * np.exp(coef * x), np.exp(coef * x)]
+    #return [np.cos(x), np.sin(x)]
 
 
 def f1(x, y):
-    return -y
+    return y
+    #return -y
 
 
 def f2(x, y):
-    return y
+    global k
+    return -k * y
+    #return y
 
 
 class MonoImplicitSolver:
@@ -75,7 +81,7 @@ class MonoImplicitSolver:
 
         while self.x[-1] < xFin:
             self.x = np.append(self.x, self.x[-1] + self.h[-1])
-            yRK = np.array(fsolve(self.res, y0, xtol=10**-12), dtype=np.float64)
+            yRK = np.array(fsolve(self.res, y0), dtype=np.float64)
             while yRK[0] is None or yRK[1] is None:
                 self.h[-1] = self.h[-1]/2
                 self.x[-1] = self.x[-1] - self.h[-1]
@@ -101,5 +107,6 @@ class MonoImplicitSolver:
 
 
 task = MonoImplicitSolver()
-print(task.solve( 0, 5, np.array([1, 0]), 0.001))
+#print(task.solve( 0, 5, np.array([1, 0]), 0.001))
+print(task.solve( 0, 5, np.array([5/4, 1]), 0.001))
 task.plot()
