@@ -8,19 +8,17 @@ k = -0.64
 coef = np.sqrt(-1 * k)
 
 def realSol(x):
-    global coef
-    return [(5/4) * np.exp(coef * x), np.exp(coef * x)]
+    return [np.exp(np.sin(x)) + 2 * np.exp(-np.sin(x)), np.exp(np.sin(x)) - 2 * np.exp(-np.sin(x))]
     #return [np.cos(x), np.sin(x)]
 
 
 def f1(x, y):
-    return y
+    return np.cos(x) * y
     #return -y
 
 
 def f2(x, y):
-    global k
-    return -k * y
+    return np.cos(x) * y
     #return y
 
 
@@ -81,7 +79,7 @@ class MonoImplicitSolver:
 
         while self.x[-1] < xFin:
             self.x = np.append(self.x, self.x[-1] + self.h[-1])
-            yRK = np.array(fsolve(self.res, y0), dtype=np.float64)
+            yRK = np.array(fsolve(self.res, y0, xtol=10**-12, factor=1, maxfev=100000000), dtype=np.float64)
             while yRK[0] is None or yRK[1] is None:
                 self.h[-1] = self.h[-1]/2
                 self.x[-1] = self.x[-1] - self.h[-1]
@@ -108,5 +106,5 @@ class MonoImplicitSolver:
 
 task = MonoImplicitSolver()
 #print(task.solve( 0, 5, np.array([1, 0]), 0.001))
-print(task.solve( 0, 5, np.array([5/4, 1]), 0.001))
+print(task.solve( 0, 5, np.array([3, -1]), 0.0001))
 task.plot()
