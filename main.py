@@ -12,7 +12,7 @@ coef = np.sqrt(-1 * k)
 
 class MonoImplicitSolver:
 
-    def __init__(self, task:str = "cos_sin"):
+    def __init__(self, task:str):
         self.timer = 0
         self.h = np.array([], dtype=np.float64)
         self.x = np.array([], dtype=np.float64)
@@ -39,6 +39,30 @@ class MonoImplicitSolver:
             self.real_sol = function.cos_sin_real_sol
             self.x0 = np.float64(0)
             self.y0 = np.array([1, 2], dtype=np.float64)
+        elif task == "simple":
+            self.f1 = function.simple_f1
+            self.f2 = function.simple_f2
+            self.real_sol = function.simple_real_sol
+            self.x0 = np.float64(0)
+            self.y0 = np.array([1, 1], dtype=np.float64)
+        elif task == "spring_pendulum":
+            self.f1 = function.spring_pendulum_f1
+            self.f2 = function.spring_pendulum_f2
+            self.real_sol = function.spring_pendulum_real_sol
+            self.x0 = np.float64(0)
+            self.y0 = np.array([1, 1], dtype=np.float64)
+        elif task == "test_x":
+            self.f1 = function.test_x_f1
+            self.f2 = function.test_x_f2
+            self.real_sol = function.test_x_real_sol
+            self.x0 = np.float64(0)
+            self.y0 = np.array([1, 1], dtype=np.float64)
+        elif task == "cos":
+            self.f1 = function.cos_f1
+            self.f2 = function.cos_f2
+            self.real_sol = function.cos_real_sol
+            self.x0 = np.float64(0)
+            self.y0 = np.array([3, -1], dtype=np.float64)
 
 
     def res(self, y):
@@ -49,16 +73,18 @@ class MonoImplicitSolver:
         y0_1 = self.y1[-1]
         y0_2 = self.y2[-1]
         x = self.x[-1]
-        k1 = np.append(k1, self.f1(x + self.c1[0] * self.h[-1], (1 - self.v12[0]) * y0_2 + self.v12[0] * y2))
-        k2 = np.append(k2, self.f2(x + self.c2[0] * self.h[-1], (1 - self.v21[0]) * y0_1 + self.v21[0] * y1 + k1[0] * self.x2[0, 0]))
-        k1 = np.append(k1, self.f1(x + self.c1[1] * self.h[-1], (1 - self.v12[1]) * y0_2 + self.v12[1] * y2 + self.x1[1][0] * k2[0]))
-        k2 = np.append(k2, self.f2(x + self.c2[1] * self.h[-1], (1 - self.v21[1]) * y0_1 + self.v21[1] * y1 + np.dot(self.x2[1][:2],k1)))
-        k1 = np.append(k1, self.f1(x + self.c1[2] * self.h[-1], (1 - self.v12[2]) * y0_2 + self.v12[2] * y2 + np.dot(self.x1[2], k2)))
+        k1 = np.append(k1, self.f1(x + self.c1[0], (1 - self.v12[0]) * y0_2 + self.v12[0] * y2))
+        k2 = np.append(k2, self.f2(x + self.c2[0], (1 - self.v21[0]) * y0_1 + self.v21[0] * y1 + k1[0] * self.x2[0, 0]))
+        k1 = np.append(k1, self.f1(x + self.c1[1], (1 - self.v12[1]) * y0_2 + self.v12[1] * y2 + self.x1[1][0] * k2[0]))
+        k2 = np.append(k2, self.f2(x + self.c2[1], (1 - self.v21[1]) * y0_1 + self.v21[1] * y1 + np.dot(self.x2[1][:2],k1)))
+        k1 = np.append(k1, self.f1(x + self.c1[2], (1 - self.v12[2]) * y0_2 + self.v12[2] * y2 + np.dot(self.x1[2], k2)))
         return [y[0] - y0_1 - self.h[-1] * np.dot(self.b1, k1), y[1] - y0_2 - self.h[-1] * np.dot(self.b2, k2)]
 
     def solve(self, xFin, h0: float):
         self.x1 = self.x1 * h0
         self.x2 = self.x2 * h0
+        self.c1 = self.c1 * h0
+        self.c2 = self.c2 * h0
         i = 0
         self.timer = datetime.datetime.now()
         self.y1 = np.append(self.y1, self.y0[0])
@@ -96,17 +122,14 @@ class MonoImplicitSolver:
         axs.plot(self.x, self.diffY2)
         plt.show()
 
-    #
-
-
-test = MonoImplicitSolver(task="cos_sin")
+# Варианты task simple, cos_sin, spring_pendulum, test_x
+test = MonoImplicitSolver(task="test_x")
 #print(task.solve( 0, 5, np.array([1, 0]), 0.001))
 print(test.solve( 5, 0.01))
 test.plot()
 
 """
 TODO list
-multiply x with h before res calling
+
 new coefs
-make task list to easy peaking
 """
