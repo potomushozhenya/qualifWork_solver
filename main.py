@@ -6,8 +6,6 @@ import function
 from numpy import sqrt
 from scipy.optimize import fsolve
 mpl.use('Qt5Agg')
-k = -0.64
-coef = np.sqrt(-1 * k)
 
 
 class MonoImplicitSolver:
@@ -123,7 +121,7 @@ class MonoImplicitSolver:
         plt.show()
 
 # Варианты task simple, cos_sin, spring_pendulum, test_x
-test = MonoImplicitSolver(task="test_x")
+test = MonoImplicitSolver(task="cos_sin")
 #print(task.solve( 0, 5, np.array([1, 0]), 0.001))
 print(test.solve( 5, 0.01))
 test.plot()
