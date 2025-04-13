@@ -14,7 +14,7 @@ def cos_sin_f2(x, y):
 
 # simple
 def simple_real_sol(x):
-    return [np.cos(x), np.sin(x)]
+    return [np.cos(x) - np.sin(x), np.sin(x) + np.cos(x)]
 
 def simple_f1(x, y):
     return -y
