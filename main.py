@@ -23,12 +23,12 @@ class MonoImplicitSolver:
         # Параметр
         x1322 = 0
         # Жесткие коэф
-        self.v12 = np.array([1, ((1219*sqrt(3) - 2127)*sqrt(2) + 1747*sqrt(3) - 3048)/(18*(4*sqrt(3) - 7)*(16*sqrt(2) + 23)), (((-48*x1322 + 13)*sqrt(3) + 72*x1322 - 23)*sqrt(2) + (-72*x1322 + 17)*sqrt(3) + 108*x1322 - 30)/(6*(2*sqrt(3) - 3)*(2*sqrt(2) + 3))], dtype=np.float64)
+        self.v12 = np.array([1, ((1219*sqrt(3) - 2127)*sqrt(2) + 1747*sqrt(3) - 3048)/(18*(4*sqrt(3) - 7)*(16*sqrt(2) + 23)), 1/6*sqrt(2) + 1/18*sqrt(3) - 1/6*sqrt(3)*sqrt(2)], dtype=np.float64)
         self.v21 = np.array([2/3 - sqrt(3)/6, ((216*sqrt(3) - 382)*sqrt(2) + 319*sqrt(3) - 564)/(6*(4*sqrt(3) - 7)*(16*sqrt(2) + 23))], dtype=np.float64)
-        self.b1 = np.array([(-1 - sqrt(2))/(2*sqrt(2) + 5), 3/4, (6*sqrt(2) + 9)/(8*sqrt(2) + 20)], dtype=np.float64)
+        self.b1 = np.array([1/8 - (25 + 24*sqrt(2))/136, 3/4, 1/8 + (25 + 24*sqrt(2))/136], dtype=np.float64)
         self.b2 = np.array([1/2, 1/2], dtype=np.float64)
-        self.c1 = np.array([1, (87*sqrt(2) + 124)/(96*sqrt(2) + 138), (4517*sqrt(2) + 6388)/(19164*sqrt(2) + 27102)], dtype=np.float64)
-        self.c2 = np.array([1/2 - sqrt(3)/6, (5*sqrt(3) - 9)/(24*sqrt(3) - 42)], dtype=np.float64)
+        self.c1 = np.array([1, 2/3 + 1/6*sqrt(2), 1/6*sqrt(2)], dtype=np.float64)
+        self.c2 = np.array([1/2 - sqrt(3)/6, 1/2 + sqrt(3)/6], dtype=np.float64)
         self.x1 = np.array([[0, 0], [-sqrt(3)*(-3 + sqrt(2))/18, 0], [(((318936*x1322 - 99512)*sqrt(3) - 552384*x1322 + 172369)*sqrt(2) + (451050*x1322 - 140728)*sqrt(3) - 781200*x1322 + 243761)/(6*(97*sqrt(3) - 168)*(548*sqrt(2) + 775)), x1322]], dtype=np.float64)
         self.x2 = np.array([[-1/6, 0, 0], [(62*sqrt(2) + 87)/(96*sqrt(2) + 138), -1, 0]], dtype=np.float64)
         if task == "cos_sin":
@@ -121,7 +121,7 @@ class MonoImplicitSolver:
         plt.show()
 
 # Варианты task simple, cos_sin, spring_pendulum, test_x
-test = MonoImplicitSolver(task="cos_sin")
+test = MonoImplicitSolver(task="simple")
 #print(task.solve( 0, 5, np.array([1, 0]), 0.001))
 print(test.solve( 5, 0.01))
 test.plot()
