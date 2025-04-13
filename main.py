@@ -31,6 +31,7 @@ class MonoImplicitSolver:
         self.x = np.array([], dtype=np.float64)
         self.y1 = np.array([], dtype=np.float64)
         self.y2 = np.array([], dtype=np.float64)
+        self.y_curr = np.array([], dtype=np.float64)
         self.diff = np.array([], dtype=np.float64)
         self.diffY1 = np.array([], dtype=np.float64)
         self.diffY2 = np.array([], dtype=np.float64)
@@ -69,6 +70,7 @@ class MonoImplicitSolver:
         self.timer = datetime.datetime.now()
         self.y1 = np.append(self.y1, y0[0])
         self.y2 = np.append(self.y2, y0[1])
+        self.y = np.array([self.y1[-1], self.y2[-1]])
         self.x = np.append(self.x, x0)
         self.h = np.append(self.h, h0)
         self.diff = np.append(self.diff, np.inf)
@@ -76,13 +78,14 @@ class MonoImplicitSolver:
         self.diffY2 = np.append(self.diffY2, np.inf)
 
         while self.x[-1] < xFin:
-            yRK = np.array(fsolve(self.res, y0, xtol=10**-12), dtype=np.float64)
+            yRK = np.array(fsolve(self.res, self.y_curr, xtol=10**-12), dtype=np.float64)
             #while yRK[0] is None or yRK[1] is None:
             #    self.h[-1] = self.h[-1]/2
             #    self.x[-1] = self.x[-1] - self.h[-1]
             #    yRK = fsolve(self.res, y0)
             self.y1 = np.append(self.y1, yRK[0])
             self.y2 = np.append(self.y2, yRK[1])
+            self.y_curr = np.array([self.y1[-1], self.y2[-1]])
             self.x = np.append(self.x, self.x[-1] + self.h[-1])
             sol = realSol(self.x[-1])
             d = np.sqrt((self.y1[-1] - sol[0]) ** 2 + (self.y2[-1] - sol[1]) ** 2)
