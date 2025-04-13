@@ -1,3 +1,4 @@
+import datetime
 import matplotlib.pyplot as plt
 import matplotlib as mpl
 import numpy as np
@@ -25,10 +26,7 @@ def f2(x, y):
 class MonoImplicitSolver:
 
     def __init__(self):
-        self.n1 = 1
-        self.n2 = 1
-        self.m1 = 3.
-        self.m2 = 2
+        self.timer = 0
         self.h = np.array([], dtype=np.float64)
         self.x = np.array([], dtype=np.float64)
         self.y1 = np.array([], dtype=np.float64)
@@ -58,14 +56,17 @@ class MonoImplicitSolver:
         y0_2 = self.y2[-1]
         x = self.x[-1]
         k1 = np.append(k1, f1(x + self.c1[0] * self.h[-1], (1 - self.v12[0]) * y0_2 + self.v12[0] * y2))
-        k2 = np.append(k2, f2(x + self.c2[0] * self.h[-1], (1 - self.v21[0]) * y0_1 + self.v21[0] * y1 + self.h[-1] * k1[0] * self.x2[0, 0]))
-        k1 = np.append(k1, f1(x + self.c1[1] * self.h[-1], (1 - self.v12[1]) * y0_2 + self.v12[1] * y2 + self.h[-1] * self.x1[1][0] * k2[0]))
-        k2 = np.append(k2, f2(x + self.c2[1] * self.h[-1], (1 - self.v21[1]) * y0_1 + self.v21[1] * y1 + self.h[-1] * np.dot(self.x2[1][:2],k1)))
-        k1 = np.append(k1, f1(x + self.c1[2] * self.h[-1], (1 - self.v12[2]) * y0_2 + self.v12[2] * y2 + self.h[-1] * np.dot(self.x1[2], k2)))
+        k2 = np.append(k2, f2(x + self.c2[0] * self.h[-1], (1 - self.v21[0]) * y0_1 + self.v21[0] * y1 + k1[0] * self.x2[0, 0]))
+        k1 = np.append(k1, f1(x + self.c1[1] * self.h[-1], (1 - self.v12[1]) * y0_2 + self.v12[1] * y2 + self.x1[1][0] * k2[0]))
+        k2 = np.append(k2, f2(x + self.c2[1] * self.h[-1], (1 - self.v21[1]) * y0_1 + self.v21[1] * y1 + np.dot(self.x2[1][:2],k1)))
+        k1 = np.append(k1, f1(x + self.c1[2] * self.h[-1], (1 - self.v12[2]) * y0_2 + self.v12[2] * y2 + np.dot(self.x1[2], k2)))
         return [y[0] - y0_1 - self.h[-1] * np.dot(self.b1, k1), y[1] - y0_2 - self.h[-1] * np.dot(self.b2, k2)]
 
     def solve(self, x0, xFin, y0: np.ndarray, h0: float):
+        self.x1 = self.x1 * h0
+        self.x2 = self.x2 * h0
         i = 0
+        self.timer = datetime.datetime.now()
         self.y1 = np.append(self.y1, y0[0])
         self.y2 = np.append(self.y2, y0[1])
         self.x = np.append(self.x, x0)
@@ -89,8 +90,9 @@ class MonoImplicitSolver:
             self.diffY1 = np.append(self.diffY1, np.abs(self.y1[-1] - sol[0]))
             self.diffY2 = np.append(self.diffY2, np.abs(self.y2[-1] - sol[1]))
             i += 1
+        self.timer = datetime.datetime.now() - self.timer
         print(i)
-        return self.y1, self.y2, self.diff
+        return self.y1, self.y2, self.diff, self.timer
 
     def plot(self):
         fig, axs = plt.subplots()
