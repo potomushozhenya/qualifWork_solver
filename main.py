@@ -47,8 +47,6 @@ class MonoImplicitSolver:
         self.c2 = np.array([1/2 - sqrt(3)/6, (5*sqrt(3) - 9)/(24*sqrt(3) - 42)], dtype=np.float64)
         self.x1 = np.array([[0, 0], [-sqrt(3)*(-3 + sqrt(2))/18, 0], [(((318936*x1322 - 99512)*sqrt(3) - 552384*x1322 + 172369)*sqrt(2) + (451050*x1322 - 140728)*sqrt(3) - 781200*x1322 + 243761)/(6*(97*sqrt(3) - 168)*(548*sqrt(2) + 775)), x1322]], dtype=np.float64)
         self.x2 = np.array([[-1/6, 0, 0], [(62*sqrt(2) + 87)/(96*sqrt(2) + 138), -1, 0]], dtype=np.float64)
-        print(np.dot(self.b1,[i*i*i for i in self.c1]) - 1/4)
-        print(np.dot(self.b2,[i*i*i for i in self.c2]) - 1/4)
 
 
     def res(self, y):
@@ -62,8 +60,7 @@ class MonoImplicitSolver:
         k1 = np.append(k1, f1(x + self.c1[0] * self.h[-1], (1 - self.v12[0]) * y0_2 + self.v12[0] * y2))
         k2 = np.append(k2, f2(x + self.c2[0] * self.h[-1], (1 - self.v21[0]) * y0_1 + self.v21[0] * y1 + self.h[-1] * k1[0] * self.x2[0, 0]))
         k1 = np.append(k1, f1(x + self.c1[1] * self.h[-1], (1 - self.v12[1]) * y0_2 + self.v12[1] * y2 + self.h[-1] * self.x1[1][0] * k2[0]))
-        k2 = np.append(k2, f2(x + self.c2[1] * self.h[-1], (1 - self.v21[1]) * y0_1 + self.v21[1] * y1 + self.h[-1] * (
-                    self.x2[1][0] * k1[0] + self.x2[1][1] * k1[1])))
+        k2 = np.append(k2, f2(x + self.c2[1] * self.h[-1], (1 - self.v21[1]) * y0_1 + self.v21[1] * y1 + self.h[-1] * np.dot(self.x2[1][:2],k1)))
         k1 = np.append(k1, f1(x + self.c1[2] * self.h[-1], (1 - self.v12[2]) * y0_2 + self.v12[2] * y2 + self.h[-1] * np.dot(self.x1[2], k2)))
         return [y[0] - y0_1 - self.h[-1] * np.dot(self.b1, k1), y[1] - y0_2 - self.h[-1] * np.dot(self.b2, k2)]
 
@@ -108,3 +105,10 @@ task = MonoImplicitSolver()
 #print(task.solve( 0, 5, np.array([1, 0]), 0.001))
 print(task.solve( 0, 5, np.array([1, 2]), 0.01))
 task.plot()
+
+"""
+TODO list
+multiply x with h before res calling
+new coefs
+make task list to easy peaking
+"""
