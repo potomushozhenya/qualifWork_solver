@@ -61,7 +61,18 @@ class MonoImplicitSolver:
             self.real_sol = function.cos_real_sol
             self.x0 = np.float64(0)
             self.y0 = np.array([3, -1], dtype=np.float64)
-
+        elif task == "stiff":
+            self.f1 = function.stiff_f1
+            self.f2 = function.stiff_f2
+            self.real_sol = function.stiff_real_sol
+            self.x0 = np.float64(0)
+            self.y0 = np.array([1, 1], dtype=np.float64)
+        elif task == "stiff_v2":
+            self.f1 = function.stiff_f1
+            self.f2 = function.stiff_v2_f2
+            self.real_sol = function.stiff_v2_real_sol
+            self.x0 = np.float64(0)
+            self.y0 = np.array([1, 1], dtype=np.float64)
 
     def res(self, y):
         k1 = np.array([], dtype=np.float64)
@@ -90,9 +101,9 @@ class MonoImplicitSolver:
         self.y_curr = np.array([self.y1[-1], self.y2[-1]])
         self.x = np.append(self.x, self.x0)
         self.h = np.append(self.h, h0)
-        self.diff = np.append(self.diff, np.inf)
-        self.diffY1 = np.append(self.diffY1, np.inf)
-        self.diffY2 = np.append(self.diffY2, np.inf)
+        self.diff = np.append(self.diff, 0)
+        self.diffY1 = np.append(self.diffY1, 0)
+        self.diffY2 = np.append(self.diffY2, 0)
 
         while self.x[-1] < xFin:
             yRK = np.array(fsolve(self.res, self.y_curr, xtol=10**-12), dtype=np.float64)
@@ -121,9 +132,9 @@ class MonoImplicitSolver:
         plt.show()
 
 # Варианты task simple, cos_sin, spring_pendulum, test_x
-test = MonoImplicitSolver(task="simple")
+test = MonoImplicitSolver(task="stiff_v2")
 #print(task.solve( 0, 5, np.array([1, 0]), 0.001))
-print(test.solve( 5, 0.01))
+print(test.solve( 5, 0.05))
 test.plot()
 
 """

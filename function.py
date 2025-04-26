@@ -58,3 +58,19 @@ def cos_f2(x, y):
 
 def cos_real_sol(x):
     return [np.exp(np.sin(x)) + 2 * np.exp(-np.sin(x)), np.exp(np.sin(x)) - 2 * np.exp(-np.sin(x))]
+
+def stiff_f1(x, y):
+    return -50 * (y - np.cos(x))
+
+def stiff_f2(x, y):
+    return -50 * (y - np.cos(x))
+
+def stiff_real_sol(x):
+    return [(50*np.sin(x))/2501 + (2500*np.cos(x))/2501 + 1/(2501*np.exp(50*x)), (50*np.sin(x))/2501 + (2500*np.cos(x))/2501 + 1/(2501*np.exp(50*x))]
+
+def stiff_v2_f2(x, y):
+    return 50 * (y - np.cos(x))
+
+def stiff_v2_real_sol(x):
+    return [(1/2499)*np.sin(50*x) + (-1/2499)*np.cos(50*x) - 50/2499*np.sin(x) + 2500/2499 * np.cos(x),
+            (-1/2499)*np.sin(50*x) - (1/2499)*np.cos(50*x) + 50/2499*np.sin(x) + 2500/2499 * np.cos(x)]
