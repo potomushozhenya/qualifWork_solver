@@ -74,3 +74,21 @@ def stiff_v2_f2(x, y):
 def stiff_v2_real_sol(x):
     return [(1/2499)*np.sin(50*x) + (-1/2499)*np.cos(50*x) - 50/2499*np.sin(x) + 2500/2499 * np.cos(x),
             (-1/2499)*np.sin(50*x) - (1/2499)*np.cos(50*x) + 50/2499*np.sin(x) + 2500/2499 * np.cos(x)]
+
+def simple_v2_real_sol(x):
+    return [2 * np.cos(x) - np.sin(x) - np.exp(-x), 2*np.sin(x) + np.cos(x)]
+
+def simple_v2_f1(x, y):
+    return -y + np.exp(-x)
+
+def simple_v2_f2(x, y):
+    return y + np.exp(-x)
+
+def simple_v3_real_sol(x):
+    return [(422/401) * np.cos(x) - (420/401) * np.sin(x) - (21/401) * np.exp(-20*x), (422/401)*np.sin(x) + (420/401)*np.cos(x) - (19/401)*np.exp(-20*x)]
+
+def simple_v3_f1(x, y):
+    return -y + np.exp(-20*x)
+
+def simple_v3_f2(x, y):
+    return y + np.exp(-20*x)
